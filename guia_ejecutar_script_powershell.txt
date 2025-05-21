@@ -1,0 +1,27 @@
+## Permitir la ejecución de script si es necesario:
+
+ # Abre una ventana de PowerShell como Administrador.
+
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+
+## Ejecutar el script
+
+    # Abre una ventana de PowerShell como Administrador.
+
+    # Navega a la carpeta donde guardaste el archivo usando cd.
+
+    # Ejecuta el script así:
+
+.\auditoria_puertos.ps1
+
+## Exportar resultados a archivos
+
+    # Puedes usar Export-Csv para guardar resultados en CSV.
+
+    # También puedes usar Out-File para guardar en TXT
+    
+
+Get-Process | Export-Csv -Path .\procesos.csv -NoTypeInformation
+
+Get-Process | Out-File -FilePath .\procesos.txt

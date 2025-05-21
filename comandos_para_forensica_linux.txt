@@ -1,0 +1,54 @@
+## Crear la carpeta
+
+sudo mkdir -p ~/Auditoria
+
+    # verificar donde se creo la carpeta
+
+ls -ld /root/Auditoria
+
+## Puertos abiertos y procesos asociados
+
+    # TCP
+sudo netstat -tulpn | grep LISTEN | awk '{print $1,$4,$7}' | sed 's/\// /g' | column -t | awk 'BEGIN {print "Protocolo, Puerto, PID/Programa"} {print $1","$2","$3}' > ~/Auditoria/Puertos_Procesos.csv
+
+    # UDP
+sudo netstat -uapn | awk '{print $1,$4,$6}' | sed 's/\// /g' | column -t | awk 'BEGIN {print "Protocolo, Puerto, PID/Programa"} {print $1","$2","$3}' > ~/Auditoria/Puertos_UDP_Procesos.csv
+
+    # Procesos en ejecución
+ps aux | awk 'BEGIN {print "Usuario, PID, CPU%, MEM%, Comando"} {print $1","$2","$3","$4","$11}' > ~/Auditoria/Procesos.csv
+
+## Directorios de logs
+
+ls /var/log/
+
+/var/log/messages       # Mensajes generales del sistema, incluyendo inicio y eventos varios.
+/var/log/syslog	        # Logs generales del sistema (en algunas distros como Debian/Ubuntu).
+/var/log/auth.log	    # Registros de autenticación, logins y accesos (Debian/Ubuntu).
+/var/log/secure	        # Registros de autenticación y seguridad (CentOS, RHEL, Fedora).
+/var/log/kern.log	    # Mensajes y eventos del kernel.
+/var/log/dmesg	        # Mensajes del arranque y detección de hardware por el kernel.
+/var/log/boot.log	    # Información del proceso de arranque del sistema.
+/var/log/daemon.log	    # Logs de demonios y servicios en segundo plano.
+/var/log/cron	        # Registros de tareas programadas con cron.
+/var/log/mail.log
+/var/log/maillog	    # Logs de servidores de correo.
+/var/log/btmp	        # Intentos fallidos de login (binario, se lee con lastb).
+/var/log/wtmp	        # Registro de sesiones iniciadas y cerradas (binario, se lee con last).
+/var/log/lastlog	    # Últimos logins de usuarios (binario, se lee con lastlog).
+/var/log/faillog	    # Intentos fallidos de login (se lee con faillog).
+
+# Log de Seguridad (auth.log)
+sudo cp /var/log/auth.log ~/Auditoria/Log_Seguridad.txt
+
+# Log del Sistema (syslog)
+sudo cp /var/log/syslog ~/Auditoria/Log_Sistema.txt
+
+# Log de Aplicaciones (dmesg)
+dmesg > ~/Auditoria/Log_Aplicaciones.txt
+
+# Opcional: Convertir logs a CSV (requiere csvkit)
+sudo apt install csvkit -y
+cat ~/Auditoria/Log_Seguridad.txt | csvformat -T > ~/Auditoria/Log_Seguridad.csv
+
+# Documentado por Alex Cabello AlexCocoPro
+
